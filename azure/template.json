@@ -1,0 +1,186 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "resourceEnvironmentName": {
+            "type": "string",
+            "metadata": {
+                "description": "Short name of the environment. Used for the name of resources created."
+            }
+        },
+        "serviceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Short name of the service. Used for the name of resources created."
+            }
+        },
+        "aspSize": {
+            "type": "string",
+            "defaultValue": "1"
+        },
+        "aspInstances": {
+            "type": "int",
+            "defaultValue": 1
+        },
+        "aspTier": {
+            "type": "string",
+            "defaultValue": "Standard"
+        },
+        "sharedResourceGroupName": {
+            "type": "string"
+        },
+        "sharedAppInsightsName": {
+            "type": "string"
+        },
+        "authenticationTenantId": {
+            "type": "string"
+        },
+        "authenticationClientId": {
+            "type": "string"
+        },
+        "sharedRedisCacheName": {
+            "type": "string"
+        },
+        "storageCacheItemLifetimeInMinutes": {
+            "type": "int",
+            "defaultValue": 480
+        },
+        "sharedStorageAccountName": {
+            "type": "string"
+        },
+        "redisDatabaseNumber": {
+            "type": "string",
+            "defaultValue": "1"
+        }
+    },
+    "variables": {
+        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/funding-platform-building-blocks/master/templates/",
+        "resourceNamePrefix": "[toLower(concat('pds-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
+        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
+        "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]"
+    },
+    "resources": [
+        {
+            "apiVersion": "2019-10-01",
+            "name": "app-service-plan",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service-plan.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "aspSize": {
+                        "value": "[parameters('aspSize')]"
+                    },
+                    "aspInstances": {
+                        "value": "[parameters('aspInstances')]"
+                    },
+                    "nonASETier": {
+                        "value": "[parameters('aspTier')]"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2019-10-01",
+            "name": "app-service",
+            "type": "Microsoft.Resources/deployments",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'app-service.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "appServiceName": {
+                        "value": "[variables('appServiceName')]"
+                    },
+                    "appServicePlanName": {
+                        "value": "[variables('appServicePlanName')]"
+                    },
+                    "appServicePlanResourceGroup": {
+                        "value": "[resourceGroup().name]"
+                    },
+                    "appServiceAppSettings": {
+                      "value": [
+                        {
+                          "name": "ASPNETCORE_FORWARDEDHEADERS_ENABLED",
+                          "value": true
+                        },
+                        {
+                          "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                          "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'microsoft.insights/components', parameters('sharedAppInsightsName')),'2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                          "name": "PdsApplicationInsights:InstrumentationKey",
+                          "value": "[reference(resourceId(parameters('sharedResourceGroupName'), 'microsoft.insights/components', parameters('sharedAppInsightsName')),'2015-05-01').InstrumentationKey]"
+                        },
+                        {
+                          "name": "Logging:ApplicationInsights:Loglevel:Default",
+                          "value": "Information"
+                        },
+                        {
+                          "name": "Logging:ApplicationInsights:Loglevel:Microsoft",
+                          "value": "Error"
+                        },
+                        {
+                          "name": "Logging:LogLevel:Default",
+                          "value": "Information"
+                        },
+                        {
+                          "name": "PdsApplicationInsights:Environment",
+                          "value": "[parameters('resourceEnvironmentName')]"
+                        },
+                        {
+                          "name": "Environment",
+                          "value": "[parameters('resourceEnvironmentName')]"
+                        },
+                        {
+                          "name": "AzureAd:Audience",
+                          "value": "[parameters('authenticationClientId')]"
+                        },
+                        {
+                          "name": "AzureAd:Instance",
+                          "value": "https://login.microsoftonline.com/"
+                        },
+                        {
+                          "name": "AzureAd:TenantId",
+                          "value": "[parameters('authenticationTenantId')]"
+                        },
+                        {
+                          "name": "AzureAd:ClientId",
+                          "value": "[parameters('authenticationClientId')]"
+                        },
+                        {
+                          "name": "StorageCache:ConnectionString",
+                          "value": "[concat(parameters('sharedRedisCacheName'), '.redis.cache.windows.net:6380,password=', listKeys(resourceId(parameters('sharedResourceGroupName'), 'Microsoft.Cache/Redis', parameters('sharedRedisCacheName')), '2016-04-01').primaryKey, ',ssl=True,abortConnect=False,defaultDatabase=', parameters('redisDatabaseNumber'))]"
+                        },
+                        {
+                          "name": "StorageCache:ItemLifetimeInMinutes",
+                          "value": "[parameters('storageCacheItemLifetimeInMinutes')]"
+                        },
+                        {
+                          "name": "NotifyTableStorage:ConnectionString",
+                          "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('sharedStorageAccountName'),';AccountKey=',listKeys(resourceId(parameters('sharedResourceGroupName'),'Microsoft.Storage/storageAccounts',parameters('sharedStorageAccountName')), providers('Microsoft.Storage', 'storageAccounts').apiVersions[0]).keys[0].value, ';EndpointSuffix=core.windows.net')]"
+                        }
+                      ]
+                    }
+                }
+            },
+            "dependsOn": [
+                "app-service-plan"
+            ]
+        }
+    ],
+    "outputs": {
+        "AppServiceName": {
+            "type": "string",
+            "value": "[variables('appServiceName')]"
+        }
+    }
+}

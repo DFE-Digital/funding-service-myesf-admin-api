@@ -1,0 +1,14 @@
+﻿@model Pds.Admin.Web.Models.ExampleViewModel
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p id="hello">@Model.Hello</p>
+        @if (Model.CurrentUserIsLoggedIn)
+        {
+            <p>You are signed in.</p>
+        }
+        else
+        {
+            @Html.ActionLink("Sign In", "Login", "Account")
+        }
+    </div>
