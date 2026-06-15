@@ -13,7 +13,7 @@ jobs:
     name: Audit - Containers
     uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@7f8be92be250dc19cc1e67e6eee0c84a87ccedb9
     with:
-      context: Pds.Admin.Api/
+      dockerfilePath: Pds.Admin.Api/
     secrets:
       buildArgs: ${{ secrets.DOCKER_BUILD_ARG }}
   lint-yaml:
