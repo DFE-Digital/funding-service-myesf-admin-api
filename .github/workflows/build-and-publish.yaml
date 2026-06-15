@@ -11,14 +11,16 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   audit-containers:
     name: Audit - Containers
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@1f005d90aa2a39a803b96ae4a28c2f7f4bde44dd
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@6402db955b546a64b95e7bcb3d00add685bf064f
     with:
       context: Pds.Admin.Api/
+    secrets:
+      buildArgs: ${{ secrets.DOCKER_BUILD_ARG }}
   lint-yaml:
     name: Lint - YAML
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@79d9f69238217357e704dc22a762cda49e1f09a2
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@6402db955b546a64b95e7bcb3d00add685bf064f
   build:
     name: Build and Publish
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@79d9f69238217357e704dc22a762cda49e1f09a2
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@6402db955b546a64b95e7bcb3d00add685bf064f
     needs: [audit-containers, lint-yaml]
     secrets: inherit
