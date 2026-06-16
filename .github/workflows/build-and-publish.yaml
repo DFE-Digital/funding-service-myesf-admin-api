@@ -22,7 +22,7 @@ jobs:
   build:
     name: Build and Publish
     uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@60ae4699af8c28e13901ce3902484a97e7c98708
-    needs: [audit-containers]
+    needs: [audit-containers, lint-yaml]
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
     secrets:
