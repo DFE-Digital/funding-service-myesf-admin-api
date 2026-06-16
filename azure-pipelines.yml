@@ -1,3 +1,4 @@
+---
 trigger:
   batch: true
   branches:
@@ -7,52 +8,52 @@ trigger:
 pr: none
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
 name: $(Build.BuildId)
 
 variables:
-  buildConfiguration: 'release'
-  #.NET SDK version number
-  dotnetVersion: '8.0'
-  #PDS custom NuGet feed id
-  nugetFeed: '9fd46a3f-eada-41dc-86e9-36332aeb8ef1/ecd5af68-0566-42db-8cd7-e71176254aa2'
-  #Path of project to be published
-  publishProjectPath: 'Pds.Admin.Api/Pds.Admin.Api.csproj'
-  #Docker variables
+  buildConfiguration: release
+  # .NET SDK version number
+  dotnetVersion: "8.0"
+  # PDS custom NuGet feed id
+  nugetFeed: 9fd46a3f-eada-41dc-86e9-36332aeb8ef1/ecd5af68-0566-42db-8cd7-e71176254aa2
+  # Path of project to be published
+  publishProjectPath: Pds.Admin.Api/Pds.Admin.Api.csproj
+  # Docker variables
   dockerRegistryServiceConnectionDev: PDS-DEV-ACR
   dockerRegistryServiceConnectionPreProd: PDS-OAT-ACR
   dockerRegistryServiceConnectionProd: PDS-Release-ACR
-  imageRepository: 'myesf/pds-admin'
-  dockerfilePath: 'Pds.Admin.Api/Dockerfile'
-  tag: '$(Build.BuildId)'
+  imageRepository: myesf/pds-admin
+  dockerfilePath: Pds.Admin.Api/Dockerfile
+  tag: $(Build.BuildId)
   patToken: $(System.AccessToken)
 
 stages:
-#Stage 1 - Audit stage: This stage checks project dependencies for security vulnerabilities
+# Stage 1 - Audit stage: This stage checks project dependencies for security vulnerabilities
 - stage: Audit
-  displayName: 'Run audit activities'
+  displayName: Run audit activities
   condition: always()
   jobs:
-  #Job 1 - Audit: This job checks project dependencies for secuirty vulnerabilites using default dotnet command 
+  # Job 1 - Audit: This job checks project dependencies for secuirty vulnerabilites using default dotnet command 
   - job: Audit
-    displayName: 'Audit project dependencies for security vulnerabilites'
+    displayName: Audit project dependencies for security vulnerabilites
     steps:
     # Step 1 - Set up .NET SDK
     - task: UseDotNet@2
-      displayName: 'Set up .NET SDK (version $(dotnetVersion))'
+      displayName: Set up .NET SDK (version $(dotnetVersion))
       inputs:
-        packageType: 'sdk'
-        version: '$(dotnetVersion).x'
-    #Step 2 - Restore NuGet packages
+        packageType: sdk
+        version: $(dotnetVersion).x
+    # Step 2 - Restore NuGet packages
     - task: DotNetCoreCLI@2
-      displayName: 'Restore .NET project dependencies (NuGet)'
+      displayName: Restore .NET project dependencies (NuGet)
       inputs:
         command: restore
-        projects: '**/*.csproj'
-        feedsToUse: 'select'
+        projects: "**/*.csproj"
+        feedsToUse: select
         vstsFeed: $(nugetFeed)
-    #Step 3 - Check for security vulnerabilities within project dependencies
+    # Step 3 - Check for security vulnerabilities within project dependencies
     - task: Bash@3
       displayName: 'Scan for vulnerable NuGet packages'
       inputs:
@@ -69,49 +70,49 @@ stages:
               exit 0      # Passes the job if no critical/high vulnerabilities are found
           fi
 
-  #Stage 2 - Test stage: This stage runs the project unit tests
+  # Stage 2 - Test stage: This stage runs the project unit tests
 - stage: Test
-  displayName: 'Run unit tests'
+  displayName: Run unit tests
   dependsOn: Audit
   condition: succeeded()
   jobs:
-  #Job 1 - Unit: Runs unit tests.
+  # Job 1 - Unit: Runs unit tests.
   - job: Unit
-    displayName: 'Run unit tests'
+    displayName: Run unit tests
     dependsOn: []
     steps:
     # Step 1 - Set up .NET SDK
     - task: UseDotNet@2
-      displayName: 'Set up .NET SDK (version $(dotnetVersion))'
+      displayName: Set up .NET SDK (version $(dotnetVersion))
       inputs:
-        packageType: 'sdk'
-        version: '$(dotnetVersion).x'
-    #Step 2 - Restore NuGet packages
+        packageType: sdk
+        version: $(dotnetVersion).x
+    # Step 2 - Restore NuGet packages
     - task: DotNetCoreCLI@2
-      displayName: 'Restore .NET project dependencies (NuGet)'
+      displayName: Restore .NET project dependencies (NuGet)
       inputs:
         command: restore
-        projects: '**/*.csproj'
-        feedsToUse: 'select'
+        projects: "**/*.csproj"
+        feedsToUse: select
         vstsFeed: $(nugetFeed)
-        verbosityRestore: 'Normal'
+        verbosityRestore: Normal
     # Step 3 - Build the project
     - task: DotNetCoreCLI@2
-      displayName: 'Build project'
+      displayName: Build project
       inputs:
-        command: 'build'
-        projects: '**/*.csproj'
-        arguments: '--configuration $(buildConfiguration) --no-restore'
+        command: build
+        projects: "**/*.csproj"
+        arguments: --configuration $(buildConfiguration) --no-restore
     # Step 4 - Run unit tests and filter by category
     - task: DotNetCoreCLI@2
-      displayName: 'Run unit tests'
+      displayName: Run unit tests
       inputs:
-        command: 'test'
-        projects: '**/*[Tt]ests/*.csproj'
-        arguments: '--configuration $(buildConfiguration) --no-build --collect "Code coverage" --filter TestCategory=Unit'
-        testRunTitle: '$(Build.Repository.Name)-Unit-$(Build.BuildId)'
+        command: test
+        projects: "**/*[Tt]ests/*.csproj"
+        arguments: "--configuration $(buildConfiguration) --no-build --collect \"Code coverage\" --filter TestCategory=Unit"
+        testRunTitle: $(Build.Repository.Name)-Unit-$(Build.BuildId)
 
-#Stage 3 - Build stage: This stage builds docker image and pushes to ACR, and builds and publishes app service artifact
+# Stage 3 - Build stage: This stage builds docker image and pushes to ACR, and builds and publishes app service artifact
 - stage: DockerBuild
   displayName: Build and push Docker images
   dependsOn: Test
@@ -119,18 +120,18 @@ stages:
   jobs:
     # Job 1 - Build and Push for Development
   - job: DockerBuildDev
-    displayName: 'Build and Push for Development'
-    condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+    displayName: Build and Push for Development
+    condition: eq(variables["Build.SourceBranch"], "refs/heads/develop")
     steps:
     # Step 1: Build the Docker image
     - task: Docker@2
-      displayName: 'Build Docker Image'
+      displayName: Build Docker Image
       inputs:
         command: build
         repository: $(imageRepository)
         containerRegistry: $(dockerRegistryServiceConnectionDev)
         dockerfile: $(dockerfilePath)
-        buildContext: "."
+        buildContext: .
         tags: |
           latest
           $(tag)
@@ -138,7 +139,7 @@ stages:
           --build-arg PDS_FEED_PAT=$(patToken)
     # Step 2: Push the Docker image to the Development container registry
     - task: Docker@2
-      displayName: 'Push Docker Image to Dev Container Registry'
+      displayName: Push Docker Image to Dev Container Registry
       inputs:
         command: push
         repository: $(imageRepository)
@@ -148,12 +149,12 @@ stages:
           $(tag)
   # Job 2 - Build and Push to Production ACR
   - job: DockerBuildPreProdProd
-    displayName: 'Build and Push for Pre-Production and Production'
-    condition: startsWith(variables['build.sourceBranch'], 'refs/heads/release')
+    displayName: Build and Push for Pre-Production and Production
+    condition: startsWith(variables["build.sourceBranch"], "refs/heads/release")
     steps:
     # Step 1: Build the Docker image
     - task: Docker@2
-      displayName: 'Build Docker Image'
+      displayName: Build Docker Image
       inputs:
         command: build
         repository: $(imageRepository)
@@ -166,7 +167,7 @@ stages:
           --build-arg PDS_FEED_PAT=$(patToken)
     # Step 2: Push the Docker image to the Preprod container registry
     - task: Docker@2
-      displayName: 'Push Docker Image to Preprod Container Registry'
+      displayName: Push Docker Image to Preprod Container Registry
       inputs:
         command: push
         repository: $(imageRepository)
@@ -176,7 +177,7 @@ stages:
           $(tag)-rc
     # Step 3: Build the Docker image
     - task: Docker@2
-      displayName: 'Build Docker Image'
+      displayName: Build Docker Image
       inputs:
         command: build
         repository: $(imageRepository)
@@ -189,7 +190,7 @@ stages:
           --build-arg PDS_FEED_PAT=$(patToken)
     # Step 4: Push the Docker image to the Prod container registry
     - task: Docker@2
-      displayName: 'Push Docker Image to Prod Container Registry'
+      displayName: Push Docker Image to Prod Container Registry
       inputs:
         command: push
         repository: $(imageRepository)
@@ -199,31 +200,31 @@ stages:
           $(tag)-rc
   # Job 3 - Publish: This job publishes the build artifact from the project
   - job: Publish
-    displayName: 'Publish build artifact'
+    displayName: Publish build artifact
     steps:
     # Step 1 - Set up .NET SDK
     - task: UseDotNet@2
-      displayName: 'Set up .NET SDK (version $(dotnetVersion))'
+      displayName: Set up .NET SDK (version $(dotnetVersion))
       inputs:
-        packageType: 'sdk'
-        version: '$(dotnetVersion).x'
-    #Step 2 - Restore NuGet packages
+        packageType: sdk
+        version: $(dotnetVersion).x
+    # Step 2 - Restore NuGet packages
     - task: DotNetCoreCLI@2
-      displayName: 'Restore .NET project dependencies (NuGet)'
+      displayName: Restore .NET project dependencies (NuGet)
       inputs:
         command: restore
-        projects: '**/*.csproj'
-        feedsToUse: 'select'
+        projects: "**/*.csproj"
+        feedsToUse: select
         vstsFeed: $(nugetFeed)
-        verbosityRestore: 'Normal'
+        verbosityRestore: Normal
     # Step 3 - Build the project
     - task: DotNetCoreCLI@2
-      displayName: 'Build project'
+      displayName: Build project
       inputs:
-        command: 'build'
-        projects: '**/*.csproj'
-        arguments: '--configuration $(buildConfiguration) --no-restore'
-    #Step 4 - Publish project
+        command: build
+        projects: "**/*.csproj"
+        arguments: --configuration $(buildConfiguration) --no-restore
+    # Step 4 - Publish project
     - task: DotNetCoreCLI@2
       displayName: 'Publish project'
       inputs:
@@ -231,16 +232,16 @@ stages:
         publishWebProjects: false
         zipAfterPublish: true
         projects: $(publishProjectPath)
-        arguments: '--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build'
-    #Step 5 - Copy published project to artifact directory
+        arguments: --configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)/publish --no-restore --no-build
+    # Step 5 - Copy published project to artifact directory
     - task: CopyFiles@2
-      displayName: 'Copy files to: $(build.artifactstagingdirectory)'
+      displayName: Copy files to: $(build.artifactstagingdirectory)
       inputs:
         contents: |
           azure/**
-        targetFolder: '$(build.artifactstagingdirectory)/publish'
-    #Step 6 - Publish build artifact
+        targetFolder: $(build.artifactstagingdirectory)/publish
+    # Step 6 - Publish build artifact
     - task: PublishBuildArtifacts@1
-      displayName: 'Publish build artifact'
+      displayName: Publish build artifact
       inputs:
-        pathtoPublish: '$(build.artifactstagingdirectory)/publish'
+        pathtoPublish: $(build.artifactstagingdirectory)/publish
