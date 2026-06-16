@@ -111,7 +111,7 @@ stages:
             inputs:
               command: test
               projects: "**/*[Tt]ests/*.csproj"
-              arguments: "--configuration $(buildConfiguration) --no-build --collect \"Code coverage\" --filter TestCategory=Unit"
+              arguments: --configuration $(buildConfiguration) --no-build --collect "Code coverage" --filter TestCategory=Unit
               testRunTitle: $(Build.Repository.Name)-Unit-$(Build.BuildId)
 
   # Stage 3 - Build stage: This stage builds docker image and pushes to ACR, and builds and publishes app service artifact
