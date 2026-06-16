@@ -25,3 +25,4 @@ jobs:
     needs: [audit-containers]
     secrets:
       buildArgs: PDS_FEED_PAT=${{ secrets.PDS_FEED_TOKEN }}
+      dockerfilePath: Pds.Admin.Api/Dockerfile
