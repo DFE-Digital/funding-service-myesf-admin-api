@@ -58,17 +58,19 @@ stages:
             displayName: Scan for vulnerable NuGet packages
             inputs:
               targetType: inline
+              # yamllint disable rule:indentation
               script: |
                 # Run dotnet command to check for vulnerable packages, including transitive dependencies
                 dotnet list package --vulnerable --include-transitive 2>&1 | tee build.log
                 echo "Analyse dotnet list package command log output..."
                 if grep -q -i "critical\|high" build.log; then
-                  echo "Must fix security vulnerabilities found on the log output."
-                  exit 1      # Fails the job if critical or high vulnerabilities are found
+                    echo "Must fix security vulnerabilities found on the log output."
+                    exit 1      # Fails the job if critical or high vulnerabilities are found
                 else
-                  echo "No critical or high severity vulnerabilities found."
-                  exit 0      # Passes the job if no critical/high vulnerabilities are found
+                    echo "No critical or high severity vulnerabilities found."
+                    exit 0      # Passes the job if no critical/high vulnerabilities are found
                 fi
+              # yamllint enable rule:indentation
 
   # Stage 2 - Test stage: This stage runs the project unit tests
   - stage: Test
@@ -112,7 +114,7 @@ stages:
               arguments: "--configuration $(buildConfiguration) --no-build --collect \"Code coverage\" --filter TestCategory=Unit"
               testRunTitle: $(Build.Repository.Name)-Unit-$(Build.BuildId)
 
-# Stage 3 - Build stage: This stage builds docker image and pushes to ACR, and builds and publishes app service artifact
+  # Stage 3 - Build stage: This stage builds docker image and pushes to ACR, and builds and publishes app service artifact
   - stage: DockerBuild
     displayName: Build and push Docker images
     dependsOn: Test
