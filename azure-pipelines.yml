@@ -123,7 +123,7 @@ stages:
       # Job 1 - Build and Push for Development
       - job: DockerBuildDev
         displayName: Build and Push for Development
-        condition: eq(variables["Build.SourceBranch"], "refs/heads/develop")
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
         steps:
           # Step 1: Build the Docker image
           - task: Docker@2
@@ -152,7 +152,7 @@ stages:
       # Job 2 - Build and Push to Production ACR
       - job: DockerBuildPreProdProd
         displayName: Build and Push for Pre-Production and Production
-        condition: startsWith(variables["build.sourceBranch"], "refs/heads/release")
+        condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
         steps:
           # Step 1: Build the Docker image
           - task: Docker@2
