@@ -114,20 +114,20 @@ stages:
               arguments: --configuration $(buildConfiguration) --no-build --collect "Code coverage" --filter TestCategory=Unit
               testRunTitle: $(Build.Repository.Name)-Unit-$(Build.BuildId)
 
-  # Stage 3 - Build stage: This stage builds docker image and pushes to ACR, and builds and publishes app service artifact
-  - stage: DockerBuild
-    displayName: Build and push Docker images
+  # Stage 3 - Publish stage: This stage publishes the Docker Image and build artifact to be deployed in the release pipelines
+  - stage: Publish
+    displayName: Publish Docker image and build artifact
     dependsOn: Test
-    condition: succeeded()
+    condition: and(succeeded(), or(eq(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/heads/release')))
     jobs:
-      # Job 1 - Build and Push for Development
+      # Job 1 - Build and Push to Development ACR
       - job: DockerBuildDev
-        displayName: Build and Push for Development
-        condition: eq(variables['Build.SourceBranch'], 'refs/heads/develop')
+        displayName: Build and push Docker image for Development
+        condition: eq(variables['Build.SourceBranch'], 'refs/heads/main')
         steps:
           # Step 1: Build the Docker image
           - task: Docker@2
-            displayName: Build Docker Image
+            displayName: Build Docker image
             inputs:
               command: build
               repository: $(imageRepository)
@@ -141,7 +141,7 @@ stages:
                 --build-arg PDS_FEED_PAT=$(patToken)
           # Step 2: Push the Docker image to the Development container registry
           - task: Docker@2
-            displayName: Push Docker Image to Dev Container Registry
+            displayName: Push Docker image to Development container registry
             inputs:
               command: push
               repository: $(imageRepository)
@@ -151,12 +151,12 @@ stages:
                 $(tag)
       # Job 2 - Build and Push to Production ACR
       - job: DockerBuildPreProdProd
-        displayName: Build and Push for Pre-Production and Production
+        displayName: Build and push Docker Image for Pre-production and Production
         condition: startsWith(variables['Build.SourceBranch'], 'refs/heads/release')
         steps:
           # Step 1: Build the Docker image
           - task: Docker@2
-            displayName: Build Docker Image
+            displayName: Build Docker image
             inputs:
               command: build
               repository: $(imageRepository)
@@ -167,9 +167,9 @@ stages:
                 $(tag)-rc
               arguments:
                 --build-arg PDS_FEED_PAT=$(patToken)
-          # Step 2: Push the Docker image to the Preprod container registry
+          # Step 2: Push the Docker image to the Pre-prod container registry
           - task: Docker@2
-            displayName: Push Docker Image to Preprod Container Registry
+            displayName: Push Docker image to Pre-prod container registry
             inputs:
               command: push
               repository: $(imageRepository)
@@ -179,7 +179,7 @@ stages:
                 $(tag)-rc
           # Step 3: Build the Docker image
           - task: Docker@2
-            displayName: Build Docker Image
+            displayName: Build Docker image
             inputs:
               command: build
               repository: $(imageRepository)
@@ -192,7 +192,7 @@ stages:
                 --build-arg PDS_FEED_PAT=$(patToken)
           # Step 4: Push the Docker image to the Prod container registry
           - task: Docker@2
-            displayName: Push Docker Image to Prod Container Registry
+            displayName: Push Docker image to Prod container registry
             inputs:
               command: push
               repository: $(imageRepository)
@@ -201,7 +201,7 @@ stages:
                 latest-rc
                 $(tag)-rc
       # Job 3 - Publish: This job publishes the build artifact from the project
-      - job: Publish
+      - job: PublishArtifact
         displayName: Publish build artifact
         steps:
           # Step 1 - Set up .NET SDK
