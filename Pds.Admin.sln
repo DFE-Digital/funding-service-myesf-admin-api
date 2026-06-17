@@ -1,21 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29806.167
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.37216.2 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Api", "Pds.Admin.Api\Pds.Admin.Api.csproj", "{AD08D618-A418-4420-A8B9-6B691DDEFCF8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Services", "Pds.Admin.Services\Pds.Admin.Services.csproj", "{DC2CC959-F750-4B39-B124-6D92B3E40933}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Services.Tests", "Pds.Admin.Services.Tests\Pds.Admin.Services.Tests.csproj", "{F9D44924-05D1-4891-99E5-474CD72D92A6}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Web", "Pds.Admin.Web\Pds.Admin.Web.csproj", "{F3A32EA3-62C5-4F2A-8454-CFFA03412523}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Web.Automation", "Pds.Admin.Web.Automation\Pds.Admin.Web.Automation.csproj", "{A50FE262-963F-4756-89FC-7F6204A6CB0E}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Web.Automation.Tests", "Pds.Admin.Web.Automation.Tests\Pds.Admin.Web.Automation.Tests.csproj", "{C448BF8B-0B5A-4E6E-911F-197EC4514FAD}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Web.Tests", "Pds.Admin.Web.Tests\Pds.Admin.Web.Tests.csproj", "{F67AB7B6-57AD-41DF-B289-F75D2D825BFA}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pds.Admin.Api.Tests", "Pds.Admin.Api.Tests\Pds.Admin.Api.Tests.csproj", "{41F934F3-2275-4C36-A917-74B0C4325249}"
 EndProject
@@ -37,22 +29,6 @@ Global
 		{F9D44924-05D1-4891-99E5-474CD72D92A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9D44924-05D1-4891-99E5-474CD72D92A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9D44924-05D1-4891-99E5-474CD72D92A6}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F3A32EA3-62C5-4F2A-8454-CFFA03412523}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F3A32EA3-62C5-4F2A-8454-CFFA03412523}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F3A32EA3-62C5-4F2A-8454-CFFA03412523}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F3A32EA3-62C5-4F2A-8454-CFFA03412523}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A50FE262-963F-4756-89FC-7F6204A6CB0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A50FE262-963F-4756-89FC-7F6204A6CB0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A50FE262-963F-4756-89FC-7F6204A6CB0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A50FE262-963F-4756-89FC-7F6204A6CB0E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C448BF8B-0B5A-4E6E-911F-197EC4514FAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C448BF8B-0B5A-4E6E-911F-197EC4514FAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C448BF8B-0B5A-4E6E-911F-197EC4514FAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C448BF8B-0B5A-4E6E-911F-197EC4514FAD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F67AB7B6-57AD-41DF-B289-F75D2D825BFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F67AB7B6-57AD-41DF-B289-F75D2D825BFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F67AB7B6-57AD-41DF-B289-F75D2D825BFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F67AB7B6-57AD-41DF-B289-F75D2D825BFA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{41F934F3-2275-4C36-A917-74B0C4325249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{41F934F3-2275-4C36-A917-74B0C4325249}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41F934F3-2275-4C36-A917-74B0C4325249}.Release|Any CPU.ActiveCfg = Release|Any CPU
