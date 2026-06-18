@@ -11,17 +11,19 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   audit-containers:
     name: Audit - Containers
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@4293123924e45cd91d0cb123babd6d4882f630ef
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@d41bd1a6acbdfe7825a456870985cde3de4e4c5b
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
     secrets:
       buildArgs: --build-arg PDS_FEED_PAT=${{ secrets.PDS_FEED_TOKEN }}
   lint-yaml:
     name: Lint - YAML
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@4293123924e45cd91d0cb123babd6d4882f630ef
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@d41bd1a6acbdfe7825a456870985cde3de4e4c5b
+    with:
+      yamllintBranch: feature/context-for-trivy
   build:
     name: Build and Publish
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@4293123924e45cd91d0cb123babd6d4882f630ef
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@d41bd1a6acbdfe7825a456870985cde3de4e4c5b
     needs: [audit-containers, lint-yaml]
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
