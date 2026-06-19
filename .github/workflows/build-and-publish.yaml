@@ -34,7 +34,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           source-url: https://sfa-gov-uk.pkgs.visualstudio.com/9fd46a3f-eada-41dc-86e9-36332aeb8ef1/_packaging/PDS/nuget/v3/index.json
-          cache: true
+          # cache: true
         env:
           NUGET_AUTH_TOKEN: ${{ secrets.PDS_FEED_TOKEN }}
 
