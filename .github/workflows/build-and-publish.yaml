@@ -40,7 +40,7 @@ jobs:
         run: dotnet --version
 
       - name: Run tests
-        run: dotnet test --configuration Release --no-build --collect "Code coverage" --filter TestCategory=Unit
+        run: dotnet test --configuration Release --collect "Code coverage" --filter TestCategory=Unit
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v4
