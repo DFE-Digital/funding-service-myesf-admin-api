@@ -46,13 +46,35 @@ jobs:
       - name: Run tests
         run: dotnet test --collect "Code coverage" -c Release -l trx --results-directory 'artifacts/tests/output' --filter TestCategory=${{ matrix.testCategories }}
 
-      - name: Upload dotnet test results
+      - name: Upload test artifacts
         uses: actions/upload-artifact@v4
+        if: ${{ success() || failure() }}
         with:
-          name: dotnet-results-${{ matrix.testCategories }}
+          name: dotnet-test-results-${{ matrix.testCategories }}
+          path: artifacts/tests/output/**
+  publish-test-results:
+    if: always()
+    needs: [test-dotnet]
+    name: Publish Test Results
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download test artifacts
+        uses: actions/download-artifact@v4
+        with:
           path: artifacts/tests/output
-        # Use always() to always run this step to publish test results when there are test failures
-        if: ${{ always() }}
+
+      - name: Publish test results
+        uses: EnricoMi/publish-unit-test-result-action/linux@v2
+        if: ${{ success() || failure() }}
+        with:
+          files: artifacts/tests/output/**/*.trx  # Path to downloaded test results
+          large_files: true  # Allows handling large test result files
+          check_name: "Test results"  # Name for the GitHub report
+          report_individual_runs: true  # Shows individual test run details
+          action_fail: true  # Fails the job if test failures are detected
+          time_unit: milliseconds  # Ensures precise reporting of test duration
+          compare_to_earlier_commit: false  # Disables comparison with previous commits  
   build:
     name: Build and Publish
     uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@0d77cdd14c2683d27041eb2ac8a6e5dfee4bd24e
