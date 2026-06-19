@@ -56,7 +56,11 @@ jobs:
     if: always()
     needs: [test-dotnet]
     name: Publish Test Results
-    permissions: write-all
+    permissions:
+      contents: read
+      issues: read
+      checks: write
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Download test artifacts
