@@ -22,6 +22,10 @@ jobs:
   test-dotnet:
     name: Tests - .NET
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: 
+        testCategories: ['Unit']
     steps:
       - name: Checkout code
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -40,13 +44,13 @@ jobs:
         run: dotnet --version
 
       - name: Run tests
-        run: dotnet test --configuration Release --collect "Code coverage" --filter TestCategory=Unit
+        run: dotnet test --collect "Code coverage" -c Release -l trx --results-directory 'artifacts/tests/output' --filter TestCategory=${{ matrix.testCategories }}
 
       - name: Upload dotnet test results
         uses: actions/upload-artifact@v4
         with:
-          name: dotnet-results-${{ matrix.dotnet-version }}
-          path: TestResults-${{ matrix.dotnet-version }}
+          name: dotnet-results-${{ matrix.testCategories }}
+          path: artifacts/tests/output
         # Use always() to always run this step to publish test results when there are test failures
         if: ${{ always() }}
   build:
