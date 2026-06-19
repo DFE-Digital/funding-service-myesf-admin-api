@@ -19,10 +19,42 @@ jobs:
   lint-yaml:
     name: Lint - YAML
     uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@0d77cdd14c2683d27041eb2ac8a6e5dfee4bd24e
+  test-dotnet:
+    name: Tests - .NET
+    strategy:
+      matrix:
+        dotnet-version: [ '8.x' ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+
+      - name: Setup dotnet ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+          source-url: https://sfa-gov-uk.pkgs.visualstudio.com/9fd46a3f-eada-41dc-86e9-36332aeb8ef1/_packaging/PDS/nuget/v3/index.json
+          cache: true
+        env:
+          NUGET_AUTH_TOKEN: ${{ secrets.PDS_FEED_TOKEN }}
+
+      # You can test your matrix by printing the current dotnet version
+      - name: Display dotnet version
+        run: dotnet --version
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --collect "Code coverage" --filter TestCategory=Unit
+
+      - name: Upload dotnet test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-results-${{ matrix.dotnet-version }}
+          path: TestResults-${{ matrix.dotnet-version }}
+        # Use always() to always run this step to publish test results when there are test failures
+        if: ${{ always() }}
   build:
     name: Build and Publish
     uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@0d77cdd14c2683d27041eb2ac8a6e5dfee4bd24e
-    needs: [audit-containers, lint-yaml]
+    needs: [audit-containers, lint-yaml, test-dotnet]
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
     secrets:
