@@ -24,8 +24,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-      matrix: 
-        testCategories: ['Unit']
+      matrix:
+        testCategories: [Unit]
     steps:
       - name: Checkout code
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
@@ -74,11 +74,11 @@ jobs:
         with:
           files: artifacts/tests/output/**/*.trx  # Path to downloaded test results
           large_files: true  # Allows handling large test result files
-          check_name: "Test results"  # Name for the GitHub report
+          check_name: Test results  # Name for the GitHub report
           report_individual_runs: true  # Shows individual test run details
           action_fail: true  # Fails the job if test failures are detected
           time_unit: milliseconds  # Ensures precise reporting of test duration
-          compare_to_earlier_commit: false  # Disables comparison with previous commits  
+          compare_to_earlier_commit: false  # Disables comparison with previous commits
   build:
     name: Build and Publish
     uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@0d77cdd14c2683d27041eb2ac8a6e5dfee4bd24e
