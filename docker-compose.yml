@@ -1,0 +1,9 @@
+services:
+  pds.admin.api:
+    image: ${DOCKER_REGISTRY-}pdsadminapi
+    build:
+      context: .
+      dockerfile: Pds.Admin.Api/Dockerfile
+
+  redis:
+    image: redis

@@ -48,7 +48,7 @@ namespace Pds.Admin.Services.Implementations.Adapters
         }
 
         /// <inheritdoc/>
-        public async Task<IActionResult> GetNotifyDetailsFor(string requestingService, string emailMessageType,  List<KeyValuePair<string, string>> metaData = null) =>
+        public async Task<IActionResult> GetNotifyDetailsFor(string requestingService, string emailMessageType, List<KeyValuePair<string, string>> metaData = null) =>
             await Adapter.Run(() => ProcessGetRequest(requestingService, emailMessageType, metaData), $"Getting the notify details for '{requestingService}' for type '{emailMessageType}'");
 
         /// <inheritdoc/>

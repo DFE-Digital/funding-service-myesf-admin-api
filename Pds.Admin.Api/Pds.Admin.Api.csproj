@@ -12,6 +12,7 @@
 	<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
 	<UserSecretsId>667469f0-7684-46f5-bccb-c87c25ff1836</UserSecretsId>
 	<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	<DockerComposeProjectPath>..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 	
   <ItemGroup>
