@@ -21,12 +21,11 @@ jobs:
     uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@f15677ff143a1b77658aef842093d7f298dccc68
   test-dotnet:
     name: Tests - .NET
-    runs-on: ubuntu-latest
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/test-dotnet.yml@f15677ff143a1b77658aef842093d7f298dccc68
     strategy:
       fail-fast: false
       matrix:
         testCategories: [Unit]
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/test-dotnet.yml@f15677ff143a1b77658aef842093d7f298dccc68
     with:
       testCategories: ${{ matrix.testCategories }}
       nugetSourceUrl: https://sfa-gov-uk.pkgs.visualstudio.com/9fd46a3f-eada-41dc-86e9-36332aeb8ef1/_packaging/PDS/nuget/v3/index.json
