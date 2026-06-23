@@ -6,7 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Pds.Admin.Services.Interfaces.Adapters;
 using Pds.Admin.Services.Interfaces.Configuration;
 using Pds.Admin.Services.Interfaces.Coordinators;
 using Pds.Services.Common.Interfaces.Adapters;

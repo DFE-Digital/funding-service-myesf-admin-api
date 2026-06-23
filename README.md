@@ -51,7 +51,7 @@ In order to run the application locally a valid `appsettings.json` file will nee
     "Environment": "local"
   },
   "StorageCache": {
-    "ConnectionString": "",
+    "ConnectionString": "redis:6379",
     "ItemLifetimeInMinutes": "480"
   }
 }
@@ -93,7 +93,34 @@ In order to run the application locally a valid `appsettings.json` file will nee
   The environment which the app is running on for Application Insights for logging purposes.
 
 - **`StorageCache:ConnectionString`**  
-  The connection string for the redis cache resource. (Local development will not let you connect to deployed Azure based redis resources and so a local one must be spun up. TODO add steps for local redis container once verified).
+  The connection string for the redis cache resource. (redis:6379 points to local redis container spun up by docker-compose).
 
 - **`StorageCache:ItemLifetimeInMinutes`**  
   The amount of time the data will be kept in redis before needing to be refreshed/recached.
+
+  ## docker-compose
+
+  This project depends on a redis distributed cache resource for storing api requests/responses. We are unable to connect to deployed cloud resources and so a local redis container must be created via Docker in order to test full functionality local.
+
+  The docker-compose.yml file includeds the orchestration for starting both the api and redis containers.
+
+  You must select docker-compose as the startup project to ensure that all dependent resources are running in Docker to run this solution locally.
+
+  ## Test execution
+
+  In order to run the application locally a valid `appsettings.json` file will need to be created in the `Pds.Admin.Api.Tests` project. `appsettings.example.json` can be used in it's current form as only reference to local redis connection is required.
+
+  For integration tests to run successfully a local redis instance must be running via Docker. The following commands can be used in order to spin up and tear down the local instance for test purposes:
+
+  ```
+  # Pulls the latest redis image
+  docker pull redis
+
+  # Starts a Docker container called local-redis on localhost using port 6379
+  docker run -d -p 6379:6379 --name local-redis redis
+
+  # Tears down and deletes the local-redis container
+  docker rm -f local-redis
+  ```
+
+  Once the local redis container is running, all tests can be executed fully.
