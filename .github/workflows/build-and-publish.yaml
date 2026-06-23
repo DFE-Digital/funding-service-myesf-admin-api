@@ -26,8 +26,8 @@ jobs:
       fail-fast: false
       matrix:
         projects: [
-          Pds.Admin.Services.Tests/Pds.Admin.Services.Tests.csproj,
-          Pds.Admin.Api.Tests/Pds.Admin.Api.Tests.csproj
+          'Pds.Admin.Services.Tests/Pds.Admin.Services.Tests.csproj',
+          'Pds.Admin.Api.Tests/Pds.Admin.Api.Tests.csproj'
         ]
     with:
       solution: ${{ matrix.projects }}
