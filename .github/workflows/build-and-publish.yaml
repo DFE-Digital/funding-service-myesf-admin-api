@@ -11,77 +11,41 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   audit-containers:
     name: Audit - Containers
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@0d77cdd14c2683d27041eb2ac8a6e5dfee4bd24e
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@ad3a68692ffc5e6b1d8ac973a2f78c1970a48fae
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
     secrets:
-      buildArgs: --build-arg PDS_FEED_PAT=${{ secrets.PDS_FEED_TOKEN }}
+      buildArgs: PDS_FEED_PAT=${{ secrets.PDS_FEED_TOKEN }}
   lint-yaml:
     name: Lint - YAML
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@0d77cdd14c2683d27041eb2ac8a6e5dfee4bd24e
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@ad3a68692ffc5e6b1d8ac973a2f78c1970a48fae
   test-dotnet:
     name: Tests - .NET
-    runs-on: ubuntu-latest
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/test-dotnet.yml@ad3a68692ffc5e6b1d8ac973a2f78c1970a48fae
     strategy:
       fail-fast: false
       matrix:
-        testCategories: [Unit]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
-
-      - name: Setup dotnet ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.x
-          source-url: https://sfa-gov-uk.pkgs.visualstudio.com/9fd46a3f-eada-41dc-86e9-36332aeb8ef1/_packaging/PDS/nuget/v3/index.json
-          # cache: true
-        env:
-          NUGET_AUTH_TOKEN: ${{ secrets.PDS_FEED_TOKEN }}
-
-      # You can test your matrix by printing the current dotnet version
-      - name: Display dotnet version
-        run: dotnet --version
-
-      - name: Run tests
-        run: dotnet test Pds.Admin.sln --collect "Code coverage" -c Release -l trx --results-directory 'artifacts/tests/output' --filter TestCategory=${{ matrix.testCategories }}
-
-      - name: Upload test artifacts
-        uses: actions/upload-artifact@v4
-        if: ${{ success() || failure() }}
-        with:
-          name: dotnet-test-results-${{ matrix.testCategories }}
-          path: artifacts/tests/output/**
+        projects: [
+          Pds.Admin.Services.Tests/Pds.Admin.Services.Tests.csproj,
+          Pds.Admin.Api.Tests/Pds.Admin.Api.Tests.csproj
+        ]
+        testCategories: [
+          Unit
+        ]
+    with:
+      solution: ${{ matrix.projects }}
+      filter: TestCategory=${{ matrix.testCategories }}
+      nugetSourceUrl: https://sfa-gov-uk.pkgs.visualstudio.com/9fd46a3f-eada-41dc-86e9-36332aeb8ef1/_packaging/PDS/nuget/v3/index.json
+    secrets:
+      nugetAuthToken: ${{ secrets.PDS_FEED_TOKEN }}
   publish-test-results:
     if: always()
     needs: [test-dotnet]
     name: Publish Test Results
-    permissions:
-      contents: read
-      issues: read
-      checks: write
-      pull-requests: write
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download test artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts/tests/output
-
-      - name: Publish test results
-        uses: EnricoMi/publish-unit-test-result-action/linux@v2
-        if: ${{ success() || failure() }}
-        with:
-          files: artifacts/tests/output/**/*.trx  # Path to downloaded test results
-          large_files: true  # Allows handling large test result files
-          check_name: Test results  # Name for the GitHub report
-          report_individual_runs: true  # Shows individual test run details
-          action_fail: true  # Fails the job if test failures are detected
-          time_unit: milliseconds  # Ensures precise reporting of test duration
-          compare_to_earlier_commit: false  # Disables comparison with previous commits
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/publish-test-results.yml@ad3a68692ffc5e6b1d8ac973a2f78c1970a48fae
   build:
     name: Build and Publish
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@0d77cdd14c2683d27041eb2ac8a6e5dfee4bd24e
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@ad3a68692ffc5e6b1d8ac973a2f78c1970a48fae
     needs: [audit-containers, lint-yaml, test-dotnet]
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
