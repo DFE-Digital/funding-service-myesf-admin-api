@@ -1,3 +1,4 @@
+---
 services:
   pds.admin.api:
     image: ${DOCKER_REGISTRY-}pdsadminapi
