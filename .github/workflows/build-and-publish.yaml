@@ -24,7 +24,7 @@ jobs:
       matrix:
         projects: [
           Pds.Admin.Api/Pds.Admin.Api.csproj,
-          Pds.Admin.Services/Pds.Admin.Services.csproj
+          Pds.Admin.Services/Pds.Admin.Services.csproj,
           Pds.Admin.Services.Tests/Pds.Admin.Services.Tests.csproj,
           Pds.Admin.Api.Tests/Pds.Admin.Api.Tests.csproj
         ]
