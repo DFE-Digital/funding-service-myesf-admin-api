@@ -11,17 +11,17 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   audit-containers:
     name: Audit - Containers
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@aced01a850d9a1c167a839a14c32bec954af0208
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@7ccfbcbe229c1615a9c059b83db00c9526d0689b
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
     secrets:
       buildArgs: PDS_FEED_PAT=${{ secrets.PDS_FEED_TOKEN }}
   lint-yaml:
     name: Lint - YAML
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@aced01a850d9a1c167a839a14c32bec954af0208
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@7ccfbcbe229c1615a9c059b83db00c9526d0689b
   test-dotnet:
     name: Tests - .NET
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/test-dotnet.yml@aced01a850d9a1c167a839a14c32bec954af0208
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/test-dotnet.yml@7ccfbcbe229c1615a9c059b83db00c9526d0689b
     strategy:
       fail-fast: false
       matrix:
@@ -35,10 +35,10 @@ jobs:
     if: always()
     needs: [test-dotnet]
     name: Publish Test Results
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/publish-test-results.yml@aced01a850d9a1c167a839a14c32bec954af0208
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/publish-test-results.yml@7ccfbcbe229c1615a9c059b83db00c9526d0689b
   build:
     name: Build and Publish
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@aced01a850d9a1c167a839a14c32bec954af0208
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@7ccfbcbe229c1615a9c059b83db00c9526d0689b
     needs: [audit-containers, lint-yaml, test-dotnet]
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
