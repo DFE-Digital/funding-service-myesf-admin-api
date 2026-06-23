@@ -27,7 +27,7 @@ jobs:
       matrix:
         testCategories: [Unit]
     with:
-      testCategories: ${{ matrix.testCategories }}
+      filter: TestCategories=${{ matrix.testCategories }}
       nugetSourceUrl: https://sfa-gov-uk.pkgs.visualstudio.com/9fd46a3f-eada-41dc-86e9-36332aeb8ef1/_packaging/PDS/nuget/v3/index.json
     secrets:
       nugetAuthToken: ${{ secrets.PDS_FEED_TOKEN }}
