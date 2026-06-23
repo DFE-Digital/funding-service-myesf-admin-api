@@ -18,7 +18,7 @@ jobs:
       buildArgs: PDS_FEED_PAT=${{ secrets.PDS_FEED_TOKEN }}
   audit-dependencies:
     name: Audit - Dependencies
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-dependencies-dotnet.yml@6762be346df0dbd82e7f88aa59324bc3ffd1c9e8
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-dependency-dotnet.yml@6762be346df0dbd82e7f88aa59324bc3ffd1c9e8
     with:
       nugetSourceUrl: https://sfa-gov-uk.pkgs.visualstudio.com/9fd46a3f-eada-41dc-86e9-36332aeb8ef1/_packaging/PDS/nuget/v3/index.json
     secrets:
