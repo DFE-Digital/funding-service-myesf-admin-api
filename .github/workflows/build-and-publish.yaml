@@ -11,14 +11,14 @@ on:  # yamllint disable-line rule:truthy
 jobs:
   audit-containers:
     name: Audit - Containers
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@7a4d95bcb5404ea2af5897f7aca110cc2fe07d8a
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-container-trivy.yml@b49733134d00397541e7abede01e019e9d5f9ec6
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
     secrets:
       buildArgs: PDS_FEED_PAT=${{ secrets.PDS_FEED_TOKEN }}
   audit-dependencies:
     name: Audit - Dependencies
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-dependency-dotnet.yml@7a4d95bcb5404ea2af5897f7aca110cc2fe07d8a
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/audit-dependency-dotnet.yml@b49733134d00397541e7abede01e019e9d5f9ec6
     strategy:
       fail-fast: false
       matrix:
@@ -35,10 +35,10 @@ jobs:
       nugetAuthToken: ${{ secrets.PDS_FEED_TOKEN }}
   lint-yaml:
     name: Lint - YAML
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@7a4d95bcb5404ea2af5897f7aca110cc2fe07d8a
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/lint-yaml.yml@b49733134d00397541e7abede01e019e9d5f9ec6
   test-dotnet:
     name: Tests - .NET
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/test-dotnet.yml@7a4d95bcb5404ea2af5897f7aca110cc2fe07d8a
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/test-dotnet.yml@b49733134d00397541e7abede01e019e9d5f9ec6
     strategy:
       fail-fast: false
       matrix:
@@ -59,10 +59,10 @@ jobs:
     if: always()
     needs: [test-dotnet]
     name: Publish Test Results
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/publish-test-results.yml@7a4d95bcb5404ea2af5897f7aca110cc2fe07d8a
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/publish-test-results.yml@b49733134d00397541e7abede01e019e9d5f9ec6
   build:
     name: Build and Publish
-    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@7a4d95bcb5404ea2af5897f7aca110cc2fe07d8a
+    uses: DFE-Digital/funding-service-workflows/.github/workflows/build-and-publish.yml@b49733134d00397541e7abede01e019e9d5f9ec6
     needs: [audit-containers, audit-dependencies, lint-yaml, test-dotnet]
     with:
       dockerfilePath: Pds.Admin.Api/Dockerfile
