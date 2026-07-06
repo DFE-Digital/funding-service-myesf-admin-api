@@ -108,7 +108,7 @@ In order to run the application locally a valid `appsettings.json` file will nee
 
   ## Test execution
 
-  In order to run the application locally a valid `appsettings.json` file will need to be created in the `Pds.Admin.Api.Tests` project. `appsettings.example.json` can be used in it's current form as only reference to local redis connection is required.
+  In order to test the application locally a valid `appsettings.json` file will need to be created in the `Pds.Admin.Api.Tests` project. `appsettings.example.json` can be used in it's current form as only reference to local redis connection is required.
 
   For integration tests to run successfully a local redis instance must be running via Docker. The following commands can be used in order to spin up and tear down the local instance for test purposes:
 
