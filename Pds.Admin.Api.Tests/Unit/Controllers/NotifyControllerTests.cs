@@ -19,7 +19,7 @@ namespace Pds.Admin.Api.Tests.Unit.Controllers
         public void ConstructorFailsWithNullAdpater()
         {
             // arrange / act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new NotifyController(null));
+            Assert.Throws<ArgumentNullException>(() => new NotifyController(null));
         }
 
         [TestMethod]

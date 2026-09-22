@@ -28,7 +28,7 @@ namespace Pds.Admin.Api.Tests.Unit
             var hostingEnvironment = MakeStrictMock<IWebHostEnvironment>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new Startup(null, hostingEnvironment));
+            Assert.Throws<ArgumentNullException>(() => new Startup(null, hostingEnvironment));
         }
 
         [TestMethod]
@@ -38,7 +38,7 @@ namespace Pds.Admin.Api.Tests.Unit
             var configuration = MakeStrictMock<IConfiguration>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new Startup(configuration, null));
+            Assert.Throws<ArgumentNullException>(() => new Startup(configuration, null));
         }
 
         [TestMethod]

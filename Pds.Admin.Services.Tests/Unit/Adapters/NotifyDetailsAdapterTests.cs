@@ -33,7 +33,7 @@ namespace Pds.Admin.Services.Tests.Unit.Adapters
             var adapter = MakeStrictMock<IAdaptActionResultOperations>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new NotifyDetailsAdapter(null, adapter));
+            Assert.Throws<ArgumentNullException>(() => new NotifyDetailsAdapter(null, adapter));
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace Pds.Admin.Services.Tests.Unit.Adapters
             var coordinator = MakeStrictMock<ICoordinateNotifyDetails>();
 
             // act /assert
-            Assert.ThrowsException<ArgumentNullException>(() => new NotifyDetailsAdapter(coordinator, null));
+            Assert.Throws<ArgumentNullException>(() => new NotifyDetailsAdapter(coordinator, null));
         }
 
         [TestMethod]

@@ -36,7 +36,7 @@ namespace Pds.Admin.Services.Tests.Unit.Coordinators
             var response = MakeStrictMock<ICreateHttpResponseMessages>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new NotifyDetailsCoordinator(null, response));
+            Assert.Throws<ArgumentNullException>(() => new NotifyDetailsCoordinator(null, response));
         }
 
         [TestMethod]
@@ -46,7 +46,7 @@ namespace Pds.Admin.Services.Tests.Unit.Coordinators
             var repo = MakeStrictMock<IAzureTableStorageRepository<NotifyServiceTemplateDetails>>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new NotifyDetailsCoordinator(repo, null));
+            Assert.Throws<ArgumentNullException>(() => new NotifyDetailsCoordinator(repo, null));
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace Pds.Admin.Services.Tests.Unit.Coordinators
             var sut = BuildTestSystem();
 
             // act / assert
-            await Assert.ThrowsExceptionAsync<MalformedRequestException>(() => sut.GetNotifyDetailsFor(requestingService, emailMessageType, null));
+            await Assert.ThrowsAsync<MalformedRequestException>(() => sut.GetNotifyDetailsFor(requestingService, emailMessageType, null));
         }
 
         [TestMethod]
@@ -199,7 +199,7 @@ namespace Pds.Admin.Services.Tests.Unit.Coordinators
             var sut = BuildTestSystem();
 
             // act / assert
-            await Assert.ThrowsExceptionAsync<MalformedRequestException>(() => sut.SetNotifyDetails(null));
+            await Assert.ThrowsAsync<MalformedRequestException>(() => sut.SetNotifyDetails(null));
         }
 
         [TestMethod]

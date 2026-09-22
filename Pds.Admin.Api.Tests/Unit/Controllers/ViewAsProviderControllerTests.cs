@@ -17,7 +17,7 @@ namespace Pds.Admin.Api.Tests.Unit.Controllers
         public void ConstructorFailsWithNullController()
         {
             // arrange / act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new ViewAsProviderController(null));
+            Assert.Throws<ArgumentNullException>(() => new ViewAsProviderController(null));
         }
 
         #region GetUkprn
