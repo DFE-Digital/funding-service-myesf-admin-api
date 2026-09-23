@@ -36,7 +36,7 @@ namespace Pds.Admin.Services.Tests.Unit.Coordinators
             var logger = MakeStrictMock<ILoggerAdapter<ViewAsProviderDetailsCoordinator>>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new ViewAsProviderDetailsCoordinator(null, config, logger));
+            Assert.Throws<ArgumentNullException>(() => new ViewAsProviderDetailsCoordinator(null, config, logger));
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Pds.Admin.Services.Tests.Unit.Coordinators
             var logger = MakeStrictMock<ILoggerAdapter<ViewAsProviderDetailsCoordinator>>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new ViewAsProviderDetailsCoordinator(cache, null, logger));
+            Assert.Throws<ArgumentNullException>(() => new ViewAsProviderDetailsCoordinator(cache, null, logger));
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace Pds.Admin.Services.Tests.Unit.Coordinators
             var config = MakeStrictMock<IConfigureCacheStorage>();
 
             // act / assert
-            Assert.ThrowsException<ArgumentNullException>(() => new ViewAsProviderDetailsCoordinator(cache, config, null));
+            Assert.Throws<ArgumentNullException>(() => new ViewAsProviderDetailsCoordinator(cache, config, null));
         }
 
         #endregion
